@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
-class Category extends Model
+class Variation extends Model
 {
     use HasFactory;
 
 	use HasRecursiveRelationships;
+
+	public function product()
+	{
+		return $this->belongsTo(Product::class);
+	}
 }
