@@ -9,9 +9,8 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     //
-	public function __invoke(CartInterface $cart)
+	public function __invoke()
 	{
-		$cart->create();
 
 		$categories = Category::tree()->get()->toTree();
 
