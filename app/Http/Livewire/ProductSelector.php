@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Cart\Contracts\CartInterface;
 use Livewire\Component;
 use App\Models\Variation;
 
@@ -11,7 +12,7 @@ class ProductSelector extends Component
     public $product;
     public $initialVariation;
     public $skuVariant;
-    
+
     protected $listeners = [
         'skuVariantSelected'
     ];
@@ -21,17 +22,25 @@ class ProductSelector extends Component
         $this->initialVariation = $this->product->variations->sortBy('order')->groupBy('type')->first();
     }
 
-    public function skuVariantSelected ($variantId) {
-        if(!$variantId) {
+    public function skuVariantSelected($variantId)
+    {
+        if (!$variantId) {
             $this->skuVariant = null;
             return;
         }
-       $this->skuVariant = Variation::find($variantId); 
-    
+        $this->skuVariant = Variation::find($variantId);
     }
 
-    public function addToCart() {
-        dd($this->skuVariant);
+    public function addToCart(CartInterface $cart)
+    {
+        $cart->add($this->skuVariant, 1);
+
+        $this->emit('cart.updated');
+
+        $this->dispatchBrowserEvent('notification', [
+            'body' => $this->skuVariant->product->title . ' added to cart',
+            'timeout' => 3000
+        ]);
     }
 
     public function render()
